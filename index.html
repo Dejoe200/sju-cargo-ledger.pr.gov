@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SJU Secure Cargo Ledger</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #002B5B;
+            --accent: #FFB100;
+            --danger: #D21312;
+            --success: #03C988;
+            --bg: #F4F7F9;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color: #1A1A1A; line-height: 1.5; }
+
+        /* Login Screen */
+        #login-screen {
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            height: 100vh; padding: 20px; text-align: center;
+        }
+
+        .login-card {
+            background: white; padding: 30px 20px; border-radius: 12px; width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 5px solid var(--primary);
+        }
+
+        input[type="text"] {
+            width: 100%; padding: 15px; border: 2px solid #DDD; border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; text-align: center;
+            margin-bottom: 15px; outline: none;
+        }
+
+        .btn-verify {
+            background: var(--primary); color: white; border: none; width: 100%;
+            padding: 15px; border-radius: 8px; font-weight: 700; cursor: pointer;
+        }
+
+        /* Dashboard */
+        #dashboard { display: none; padding-bottom: 50px; }
+
+        header {
+            background: var(--primary); color: white; padding: 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .container { padding: 15px; }
+
+        .status-header {
+            background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .badge {
+            background: #FFEBEB; color: var(--danger); padding: 4px 10px;
+            border-radius: 4px; font-size: 0.75rem; font-weight: 800;
+        }
+
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
+        .card h3 { margin: 0 0 10px 0; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Timer Styling */
+        .timer-display {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.4rem; font-weight: 700; color: var(--primary);
+            display: flex; gap: 10px; margin-top: 5px;
+        }
+        .timer-unit { font-size: 0.6rem; color: #888; text-transform: uppercase; display: block; margin-top: -5px; }
+
+        .progress-bar-bg { width: 100%; background: #EEE; height: 10px; border-radius: 5px; overflow: hidden; margin-top: 15px; }
+        #progress-fill { width: 15%; height: 100%; background: var(--primary); transition: width 1s linear; }
+
+        .security-banner {
+            background: #111; color: white; padding: 20px; border-radius: 12px;
+            margin-top: 15px; border-left: 5px solid var(--accent);
+        }
+
+        .action-area { margin-top: 25px; }
+        .btn-invoice { background: #EEE; color: #333; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; margin-top: 10px; cursor: pointer; }
+
+        @media print {
+            #login-screen, header, .action-area { display: none !important; }
+            #dashboard { display: block !important; background: white; }
+            .card, .status-header { border: 1px solid #ddd; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="login-screen">
+    <div class="login-card">
+        <h2 style="color: var(--primary);">Asset Security Portal</h2>
+        <p style="font-size: 0.9rem; color: #666;">Enter Unique Tracking ID to authenticate.</p>
+        <input type="text" id="assetID" placeholder="TSL-XXXX" autocomplete="off">
+        <button class="btn-verify" onclick="verifyID()">AUTHENTICATE ACCESS</button>
+        <p id="error" style="color: var(--danger); font-size: 0.8rem; margin-top: 10px; display: none;">ACCESS DENIED: ID NOT FOUND</p>
+    </div>
+</div>
+
+<div id="dashboard">
+    <header>
+        <div style="font-weight: 800; font-size: 0.8rem;">AEROSTAR SJU | OPERATIONS</div>
+        <div style="font-size: 0.6rem; color: var(--success); font-family: 'JetBrains Mono';">● SYSTEM SECURE</div>
+    </header>
+
+    <div class="container">
+        <div class="status-header">
+            <div style="display: flex; justify-content: space-between;">
+                <span class="badge">STAGING HOLD</span>
+                <span style="font-family: 'JetBrains Mono'; font-size: 0.7rem;">REF: TSL-8462</span>
+            </div>
+            <h1 style="font-size: 1.4rem; margin: 15px 0 5px 0;">Asset Unit: #88-G</h1>
+            <p style="margin: 0; font-size: 0.85rem; color: #666;">Value Protection: <strong>$700,000.00 USD</strong></p>
+        </div>
+
+        <div class="card">
+            <h3>Logistics Staging Clock</h3>
+            <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <span style="font-weight: 800; color: var(--primary);">Day 3 of 20</span>
+                <span style="font-size: 0.75rem; color: var(--danger); font-weight: 600;">STATUS: ACTIVE</span>
+            </div>
+            
+            <div class="timer-display" id="countdown">
+                <div>17<span class="timer-unit">Days</span></div>
+                <div>00<span class="timer-unit">Hrs</span></div>
+                <div>00<span class="timer-unit">Min</span></div>
+                <div>00<span class="timer-unit">Sec</span></div>
+            </div>
+
+            <div class="progress-bar-bg">
+                <div id="progress-fill"></div>
+            </div>
+            <p style="font-size: 0.7rem; color: #999; margin-top: 10px;">* Automated G.O. transfer protocol initiates at 00:00:00</p>
+        </div>
+
+        <div class="card">
+            <h3>Asset Location</h3>
+            <p style="margin: 0; font-size: 0.9rem;">Luis Muñoz Marín Int'l - <strong>High-Security Vault Sector B</strong></p>
+        </div>
+
+        <div class="security-banner">
+            <h4 style="margin: 0; color: var(--accent); font-size: 0.9rem;">REMOTE DECRYPTION PROTOCOL</h4>
+            <p style="font-size: 0.75rem; margin-top: 8px; opacity: 0.8;">
+                Electronic Seal is locked via end-to-end encryption. Local terminal override is physically impossible. Content access requires Origin-Side Remote Key.
+            </p>
+        </div>
+
+        <div class="action-area">
+            <button class="btn-verify">AUTHORIZE RELEASE ($1,200)</button>
+            <button class="btn-invoice" onclick="window.print()">GENERATE PDF INVOICE</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set the goal: 17 days from right now
+    const targetDate = new Date().getTime() + (17 * 24 * 60 * 60 * 1000);
+
+    function updateTimer() {
+        const now = new Date().getTime();
+        const diff = targetDate - now;
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        document.getElementById('countdown').innerHTML = `
+            <div>${days}<span class="timer-unit">Days</span></div>
+            <div>${hours.toString().padStart(2, '0')}<span class="timer-unit">Hrs</span></div>
+            <div>${mins.toString().padStart(2, '0')}<span class="timer-unit">Min</span></div>
+            <div>${secs.toString().padStart(2, '0')}<span class="timer-unit">Sec</span></div>
+        `;
+
+        // Update progress bar (3 days used out of 20 = 15%)
+        // This makes it slowly crawl forward
+        const totalDuration = 20 * 24 * 60 * 60 * 1000;
+        const elapsed = totalDuration - diff;
+        const progress = (elapsed / totalDuration) * 100;
+        document.getElementById('progress-fill').style.width = progress + "%";
+    }
+
+    function verifyID() {
+        const id = document.getElementById('assetID').value.toUpperCase();
+        if (id === 'TSL-8462') {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            setInterval(updateTimer, 1000); // Start the live countdown
+            updateTimer();
+        } else {
+            document.getElementById('error').style.display = 'block';
+            setTimeout(() => { document.getElementById('error').style.display = 'none'; }, 2000);
+        }
+    }
+</script>
+
+</body>
+</html>
