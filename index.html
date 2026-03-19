@@ -6,88 +6,34 @@
     <title>SJU-Tesla Global Logistics Node</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #002B5B;
-            --accent: #FFB100;
-            --danger: #D21312;
-            --success: #03C988;
-            --bg: #F4F7F9;
-            --tesla-red: #E82127;
-        }
-
+        :root { --primary: #002B5B; --accent: #FFB100; --danger: #D21312; --success: #03C988; --bg: #F4F7F9; --tesla-red: #E82127; }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color: #1A1A1A; line-height: 1.5; }
 
         /* Login Screen */
-        #login-screen {
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            min-height: 100vh; padding: 20px; text-align: center;
-        }
-
-        .login-card {
-            background: white; padding: 30px 20px; border-radius: 12px; width: 100%; max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 5px solid var(--tesla-red);
-        }
-
-        .official-seal {
-            font-size: 0.65rem; font-weight: 800; color: #888; letter-spacing: 2px;
-            margin-bottom: 20px; text-transform: uppercase;
-        }
-
-        .partnership-text {
-            font-size: 0.75rem; color: #555; margin-bottom: 25px; line-height: 1.6;
-            padding: 15px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee;
-        }
-
-        input[type="text"] {
-            width: 100%; padding: 15px; border: 2px solid #DDD; border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; text-align: center;
-            margin-bottom: 15px; outline: none;
-        }
-
-        .btn-verify {
-            background: var(--primary); color: white; border: none; width: 100%;
-            padding: 15px; border-radius: 8px; font-weight: 700; cursor: pointer;
-        }
+        #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; text-align: center; }
+        .login-card { background: white; padding: 30px 20px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 5px solid var(--tesla-red); }
+        .official-seal { font-size: 0.6rem; font-weight: 800; color: #888; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
+        .partnership-text { font-size: 0.7rem; color: #555; margin-bottom: 20px; line-height: 1.6; padding: 12px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; text-align: left; }
+        input[type="text"] { width: 100%; padding: 15px; border: 2px solid #DDD; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; text-align: center; margin-bottom: 15px; outline: none; }
+        .btn-verify { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
         /* Dashboard */
         #dashboard { display: none; padding-bottom: 50px; }
-
-        header {
-            background: #111; color: white; padding: 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--tesla-red);
-        }
-
+        header { background: #111; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--tesla-red); }
         .container { padding: 15px; }
-
-        .status-header {
-            background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        .badge {
-            background: #FFEBEB; color: var(--danger); padding: 4px 10px;
-            border-radius: 4px; font-size: 0.7rem; font-weight: 800;
-        }
+        .status-header { background: white; padding: 20px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .badge { background: #FFEBEB; color: var(--danger); padding: 4px 10px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; }
 
         .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        .card h3 { margin: 0 0 10px 0; font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .card h3 { margin: 0 0 10px 0; font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
 
-        .timer-display {
-            font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; font-weight: 700; color: var(--primary);
-            display: flex; gap: 10px; margin-top: 5px;
-        }
-        .timer-unit { font-size: 0.6rem; color: #888; text-transform: uppercase; display: block; margin-top: -5px; }
+        .timer-display { font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 700; color: var(--primary); display: flex; gap: 8px; margin-top: 5px; }
+        .timer-unit { font-size: 0.55rem; color: #888; text-transform: uppercase; display: block; margin-top: -3px; font-family: 'Inter'; }
 
         #progress-fill { width: 15%; height: 100%; background: var(--tesla-red); transition: width 1s linear; }
-
-        .security-banner {
-            background: #111; color: white; padding: 20px; border-radius: 12px;
-            margin-top: 15px; border-left: 5px solid var(--tesla-red);
-        }
-
-        .btn-invoice { background: #EEE; color: #333; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; margin-top: 10px; cursor: pointer; }
+        .security-banner { background: #111; color: white; padding: 18px; border-radius: 12px; margin-top: 15px; border-left: 5px solid var(--tesla-red); }
+        .btn-invoice { background: #EEE; color: #333; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; margin-top: 10px; cursor: pointer; font-size: 0.85rem; }
 
         @media print {
             #login-screen, header, .action-area { display: none !important; }
@@ -101,26 +47,22 @@
 <div id="login-screen">
     <div class="login-card">
         <div class="official-seal">PRPA × U.S. DOT × TESLA</div>
-        <h2 style="margin: 0; color: #111; font-size: 1.2rem;">Secure Asset Node</h2>
-        
+        <h2 style="margin: 0; color: #111; font-size: 1.1rem;">Asset Security Node</h2>
         <div class="partnership-text">
-            This is an official <strong>Puerto Rico Logistics Gateway</strong>. Operated in direct partnership with the <strong>United States Federal Government</strong> and <strong>Tesla Global Energy & Logistics</strong>. All high-value assets are monitored via encrypted satellite link to ensure federal compliance and asset integrity.
+            This is an official <strong>Puerto Rico Logistics Gateway</strong>. Operated in direct partnership with the <strong>U.S. Federal Government</strong> and <strong>Tesla Global Energy</strong>. Assets are monitored via encrypted satellite link.
         </div>
-
-        <p style="font-size: 0.8rem; color: #666; margin-bottom: 10px;">Authenticated Access Required</p>
-        <input type="text" id="assetID" placeholder="TSL-XXXX" autocomplete="off">
-        <button class="btn-verify" onclick="verifyID()" style="background: var(--tesla-red);">AUTHENTICATE GATEWAY</button>
-        <p id="error" style="color: var(--danger); font-size: 0.75rem; margin-top: 10px; display: none;">INVALID SECURITY ID: ACCESS REVOKED</p>
+        <input type="text" id="assetID" placeholder="ID: TSL-XXXX" autocomplete="off">
+        <button class="btn-verify" onclick="verifyID()" style="background: var(--tesla-red);">Authenticate Access</button>
+        <p id="error" style="color: var(--danger); font-size: 0.7rem; margin-top: 10px; display: none;">ACCESS DENIED: INVALID SECURITY CREDENTIALS</p>
     </div>
-    <p style="font-size: 0.6rem; color: #aaa; margin-top: 20px;">v4.0.2 Build: PR-SJU-77B-V5 | Encrypted Connection</p>
 </div>
 
 <div id="dashboard">
     <header>
-        <div style="font-weight: 800; font-size: 0.75rem; letter-spacing: 1px;">TESLA | SJU LOGISTICS</div>
+        <div style="font-weight: 800; font-size: 0.7rem; letter-spacing: 1px;">TESLA | SJU LOGISTICS</div>
         <div style="text-align: right;">
-            <div style="font-size: 0.55rem; color: var(--success); font-family: 'JetBrains Mono';">● NODE ACTIVE</div>
-            <div style="font-size: 0.45rem; color: #888; font-family: 'JetBrains Mono'; uppercase;">SESSION: <span id="session-id"></span></div>
+            <div style="font-size: 0.5rem; color: var(--success); font-family: 'JetBrains Mono';">● ENCRYPTION: AES-256</div>
+            <div style="font-size: 0.4rem; color: #888; font-family: 'JetBrains Mono'; text-transform: uppercase;">SESSION: <span id="session-id"></span></div>
         </div>
     </header>
 
@@ -128,95 +70,120 @@
         <div class="status-header">
             <div style="display: flex; justify-content: space-between;">
                 <span class="badge">STAGING HOLD</span>
-                <span style="font-family: 'JetBrains Mono'; font-size: 0.7rem;">ID: TSL-8462</span>
+                <span style="font-family: 'JetBrains Mono'; font-size: 0.65rem;">REF: TSL-8462</span>
             </div>
-            <h1 style="font-size: 1.3rem; margin: 15px 0 5px 0;">Asset Unit: #88-G</h1>
-            <p style="margin: 0; font-size: 0.8rem; color: #666;">Global Value Protection: <strong>$700,000.00 USD</strong></p>
+            <h1 style="font-size: 1.25rem; margin: 12px 0 4px 0;">María Vélez Wampl</h1>
+            <p style="margin: 0; font-size: 0.8rem; color: #666;">Asset Unit: <strong>#88-G ($700k USD)</strong></p>
         </div>
 
         <div class="card">
             <h3>Automated Staging Clock</h3>
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                <span style="font-weight: 800; color: var(--primary);">Day 3 of 20</span>
-                <span style="font-size: 0.7rem; color: var(--danger); font-weight: 800;">REMOVAL PENDING</span>
+                <span style="font-weight: 800; color: var(--primary); font-size: 0.9rem;">Day 3 of 20</span>
+                <span style="font-size: 0.65rem; color: var(--danger); font-weight: 800;">PENDING RELOCATION</span>
             </div>
             
             <div class="timer-display" id="countdown">
-                <div>17<span class="timer-unit">Days</span></div>
+                <div>00<span class="timer-unit">Days</span></div>
                 <div>00<span class="timer-unit">Hrs</span></div>
                 <div>00<span class="timer-unit">Min</span></div>
                 <div>00<span class="timer-unit">Sec</span></div>
             </div>
 
-            <div style="width: 100%; background: #EEE; height: 8px; border-radius: 4px; overflow: hidden; margin-top: 15px;">
+            <div style="width: 100%; background: #EEE; height: 7px; border-radius: 4px; overflow: hidden; margin-top: 12px;">
                 <div id="progress-fill"></div>
             </div>
+            <p style="font-size: 0.65rem; color: #999; margin-top: 8px;">* Internal clock synchronized with SJU Master Server.</p>
         </div>
 
         <div class="card">
             <h3>Infrastructure Partners</h3>
             <p style="margin: 0; font-size: 0.75rem; color: #444; line-height: 1.4;">
-                Storage managed by <strong>Aerostar SJU</strong>.<br>
-                Security protocol by <strong>Tesla T-Security</strong>.<br>
-                Regulatory oversight by <strong>Hacienda PR / US Customs</strong>.
+                Storage: <strong>Aerostar SJU Sector B</strong><br>
+                Security: <strong>Tesla T-Security (Live Feed)</strong><br>
+                Oversight: <strong>U.S. Customs / Hacienda PR</strong>
             </p>
         </div>
 
         <div class="security-banner">
-            <h4 style="margin: 0; color: var(--tesla-red); font-size: 0.8rem; letter-spacing: 1px;">REMOTE ENCRYPTION SEAL</h4>
-            <p style="font-size: 0.7rem; margin-top: 8px; opacity: 0.8; line-height: 1.4;">
-                This container is under 24/7 Satellite surveillance. Physical tampering triggers immediate asset forfeiture. Unlocking requires a 12-digit key issued by Tesla Origin Server.
+            <h4 style="margin: 0; color: var(--tesla-red); font-size: 0.75rem; text-transform: uppercase;">Remote Encryption Seal</h4>
+            <p style="font-size: 0.68rem; margin-top: 6px; opacity: 0.8; line-height: 1.3;">
+                Container is double-locked via Tesla HQ server. Port personnel have no physical access. Only the verified sender can transmit the 12-digit decryption key upon fee settlement.
             </p>
         </div>
 
         <div class="action-area">
-            <button class="btn-verify" style="background: var(--tesla-red);">SETTLE RELEASE FEE ($1,200)</button>
-            <button class="btn-invoice" onclick="window.print()">DOWNLOAD OFFICIAL INVOICE (PDF)</button>
+            <button class="btn-verify" style="background: var(--tesla-red);">Pay Release Fee ($2,000)</button>
+            <button class="btn-invoice" onclick="window.print()">Download Official Invoice (PDF)</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Session ID Generation
-    document.getElementById('session-id').innerText = Math.random().toString(36).substring(2, 10).toUpperCase();
+    // Generate a session ID that stays for the session
+    if(!sessionStorage.getItem('sju_session')) {
+        sessionStorage.setItem('sju_session', Math.random().toString(36).substring(2, 10).toUpperCase());
+    }
+    document.getElementById('session-id').innerText = sessionStorage.getItem('sju_session');
 
-    // 17-Day Dynamic Timer
-    const targetDate = new Date().getTime() + (17 * 24 * 60 * 60 * 1000);
+    // PERSISTENCE ENGINE
+    // We set the "Arrival Date" to 3 days ago so the clock shows exactly 17 days left on a 20-day window.
+    function getDeadline() {
+        let deadline = localStorage.getItem('tesla_sju_deadline');
+        if (!deadline) {
+            // Calculate a fixed deadline: 17 days from right now
+            deadline = new Date().getTime() + (17 * 24 * 60 * 60 * 1000);
+            localStorage.setItem('tesla_sju_deadline', deadline);
+        }
+        return parseInt(deadline);
+    }
 
-    function updateTimer() {
+    function updateClock() {
+        const target = getDeadline();
         const now = new Date().getTime();
-        const diff = targetDate - now;
+        const diff = target - now;
 
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+        if (diff <= 0) {
+            document.getElementById('countdown').innerHTML = "RELOCATION INITIATED";
+            return;
+        }
+
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
 
         document.getElementById('countdown').innerHTML = `
-            <div>${days}<span class="timer-unit">Days</span></div>
-            <div>${hours.toString().padStart(2, '0')}<span class="timer-unit">Hrs</span></div>
-            <div>${mins.toString().padStart(2, '0')}<span class="timer-unit">Min</span></div>
-            <div>${secs.toString().padStart(2, '0')}<span class="timer-unit">Sec</span></div>
+            <div>${d}<span class="timer-unit">Days</span></div>
+            <div>${h.toString().padStart(2, '0')}<span class="timer-unit">Hrs</span></div>
+            <div>${m.toString().padStart(2, '0')}<span class="timer-unit">Min</span></div>
+            <div>${s.toString().padStart(2, '0')}<span class="timer-unit">Sec</span></div>
         `;
 
-        const totalDuration = 20 * 24 * 60 * 60 * 1000;
-        const elapsed = totalDuration - diff;
-        const progress = (elapsed / totalDuration) * 100;
-        document.getElementById('progress-fill').style.width = progress + "%";
+        // Calculate progress based on a 20-day total window
+        // (20 days total - 17 days left = 3 days passed = 15% progress)
+        const totalMs = 20 * 24 * 60 * 60 * 1000;
+        const elapsed = totalMs - diff;
+        const percent = (elapsed / totalMs) * 100;
+        document.getElementById('progress-fill').style.width = percent + "%";
     }
 
     function verifyID() {
-        const id = document.getElementById('assetID').value.toUpperCase();
-        if (id === 'TSL-8462') {
+        const input = document.getElementById('assetID').value.toUpperCase();
+        if (input === 'TSL-8462') {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
-            setInterval(updateTimer, 1000);
-            updateTimer();
+            updateClock();
+            setInterval(updateClock, 1000);
         } else {
-            document.getElementById('error').style.display = 'block';
-            setTimeout(() => { document.getElementById('error').style.display = 'none'; }, 2000);
+            const err = document.getElementById('error');
+            err.style.display = 'block';
+            setTimeout(() => { err.style.display = 'none'; }, 2000);
         }
     }
+
+    // Testing Tip: To reset the timer for yourself, 
+    // open your browser console and type: localStorage.clear();
 </script>
 
 </body>
