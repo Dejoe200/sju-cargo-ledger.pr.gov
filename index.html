@@ -10,15 +10,13 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; color: #1A1A1A; line-height: 1.5; }
 
-        /* Login Screen */
         #login-screen { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; text-align: center; }
         .login-card { background: white; padding: 30px 20px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 5px solid var(--tesla-red); }
         .official-seal { font-size: 0.6rem; font-weight: 800; color: #888; letter-spacing: 2px; margin-bottom: 15px; text-transform: uppercase; }
         .partnership-text { font-size: 0.7rem; color: #555; margin-bottom: 20px; line-height: 1.6; padding: 12px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; text-align: left; }
         input[type="text"] { width: 100%; padding: 15px; border: 2px solid #DDD; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; text-align: center; margin-bottom: 15px; outline: none; }
-        .btn-verify { background: var(--primary); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-verify { background: var(--tesla-red); color: white; border: none; width: 100%; padding: 15px; border-radius: 8px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Dashboard */
         #dashboard { display: none; padding-bottom: 50px; }
         header { background: #111; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--tesla-red); }
         .container { padding: 15px; }
@@ -31,7 +29,7 @@
         .timer-display { font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 700; color: var(--primary); display: flex; gap: 8px; margin-top: 5px; }
         .timer-unit { font-size: 0.55rem; color: #888; text-transform: uppercase; display: block; margin-top: -3px; font-family: 'Inter'; }
 
-        #progress-fill { width: 15%; height: 100%; background: var(--primary); transition: width 1s linear, background 0.5s ease; }
+        #progress-fill { width: 50%; height: 100%; background: var(--primary); transition: width 1s linear, background 0.5s ease; }
         .security-banner { background: #111; color: white; padding: 18px; border-radius: 12px; margin-top: 15px; border-left: 5px solid var(--tesla-red); }
         .btn-invoice { background: #EEE; color: #333; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; margin-top: 10px; cursor: pointer; font-size: 0.85rem; }
 
@@ -52,7 +50,7 @@
             This is an official <strong>Puerto Rico Logistics Gateway</strong>. Operated in direct partnership with the <strong>U.S. Federal Government</strong> and <strong>Tesla Global Energy</strong>. Assets are monitored via encrypted satellite link.
         </div>
         <input type="text" id="assetID" placeholder="ID: TSL-XXXX" autocomplete="off">
-        <button class="btn-verify" onclick="verifyID()" style="background: var(--tesla-red);">Authenticate Access</button>
+        <button class="btn-verify" onclick="verifyID()">Authenticate Access</button>
         <p id="error" style="color: var(--danger); font-size: 0.7rem; margin-top: 10px; display: none;">ACCESS DENIED: INVALID SECURITY CREDENTIALS</p>
     </div>
 </div>
@@ -79,7 +77,7 @@
         <div class="card">
             <h3>Automated Staging Clock</h3>
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                <span style="font-weight: 800; color: var(--primary); font-size: 0.9rem;" id="day-text">Day 9 of 20</span>
+                <span style="font-weight: 800; color: var(--primary); font-size: 0.9rem;" id="day-text">Day 10 of 20</span>
                 <span style="font-size: 0.65rem; color: var(--danger); font-weight: 800;" id="status-text">PENDING RELOCATION</span>
             </div>
             
@@ -94,7 +92,7 @@
                 <div id="progress-fill"></div>
             </div>
             
-            <p id="grace-notice" style="font-size: 0.65rem; color: #888; margin-top: 8px; font-weight: 600;"></p>
+            <p id="grace-notice" style="font-size: 0.65rem; color: #888; margin-top: 8px; font-weight: 600;">* 13-Day Grace Period queued to activate automatically upon expiry.</p>
             <p style="font-size: 0.65rem; color: #999; margin-top: 4px;">* Internal clock synchronized with SJU Master Server.</p>
         </div>
 
@@ -115,7 +113,7 @@
         </div>
 
         <div class="action-area">
-            <button class="btn-verify" style="background: var(--tesla-red);">Pay Release Fee ($2,000)</button>
+            <button class="btn-verify" style="padding: 18px; font-size: 1rem;">Pay Release Fee ($2,000)</button>
             <button class="btn-invoice" onclick="window.print()">Download Official Invoice (PDF)</button>
         </div>
     </div>
@@ -127,12 +125,11 @@
     }
     document.getElementById('session-id').innerText = sessionStorage.getItem('sju_session');
 
-    // PERSISTENCE ENGINE
     function getDeadline() {
         let deadline = localStorage.getItem('tesla_sju_deadline');
         if (!deadline) {
-            // Set initial deadline to exactly 11 days from right now
-            deadline = new Date().getTime() + (11 * 24 * 60 * 60 * 1000);
+            // SETTING: 10 Days remaining starting from NOW
+            deadline = new Date().getTime() + (10 * 24 * 60 * 60 * 1000);
             localStorage.setItem('tesla_sju_deadline', deadline);
             localStorage.setItem('tesla_sju_grace', 'false');
         }
@@ -145,19 +142,15 @@
         let diff = target - now;
         let isGrace = localStorage.getItem('tesla_sju_grace') === 'true';
 
-        // Check if the original 11 days hit zero
+        // THE MAGIC JUMP: Triggered when 10-day timer hits zero
         if (diff <= 0 && !isGrace) {
-            // THE MAGIC: Automatically jump to 13-day grace period
             target = now + (13 * 24 * 60 * 60 * 1000);
             localStorage.setItem('tesla_sju_deadline', target);
             localStorage.setItem('tesla_sju_grace', 'true');
             isGrace = true;
             diff = target - now; 
         } else if (diff <= 0 && isGrace) {
-            // Final expiration after grace period finishes
-            document.getElementById('countdown').innerHTML = "<div style='color: var(--danger); font-size: 1.1rem; padding: 10px 0;'>RELOCATION INITIATED</div>";
-            document.getElementById('grace-notice').style.display = 'none';
-            document.getElementById('progress-fill').style.width = '100%';
+            document.getElementById('countdown').innerHTML = "<div style='color: var(--danger);'>RELOCATION INITIATED</div>";
             return;
         }
 
@@ -178,35 +171,25 @@
         const progressFill = document.getElementById('progress-fill');
         const statusText = document.getElementById('status-text');
 
-        // Update UI depending on which timer is currently running
         if (isGrace) {
             let currentDay = 13 - d;
-            if (currentDay < 1) currentDay = 1;
             dayText.innerText = `Grace Period: Day ${currentDay} of 13`;
             dayText.style.color = "var(--danger)";
             statusText.innerText = "FINAL WARNING";
-            
-            graceNotice.innerHTML = `* 13-Day Grace Period is ACTIVE. Assets will be relocated upon expiry.`;
-            graceNotice.style.color = "var(--tesla-red)";
-            progressFill.style.background = "var(--danger)"; // Turns the bar red
+            graceNotice.innerText = "* 13-Day Grace Period is ACTIVE. Assets will be relocated upon expiry.";
+            graceNotice.style.color = "var(--danger)";
+            progressFill.style.background = "var(--danger)";
             
             const totalMs = 13 * 24 * 60 * 60 * 1000;
-            const percent = ((totalMs - diff) / totalMs) * 100;
-            progressFill.style.width = percent + "%";
-            
+            progressFill.style.width = ((totalMs - diff) / totalMs) * 100 + "%";
         } else {
-            let currentDay = 20 - (d + 9); // Math to align 11 remaining days with Day 9 of 20
-            if (currentDay < 1) currentDay = 1;
+            // Logic to keep it at "Day 10 of 20" for the first part
+            let currentDay = 20 - d; 
             dayText.innerText = `Day ${currentDay} of 20`;
             
-            graceNotice.innerHTML = `* 13-Day Grace Period queued to activate automatically upon expiry.`;
-            graceNotice.style.color = "#888";
-            progressFill.style.background = "var(--primary)"; // Keeps the bar blue
-            
             const totalMs = 20 * 24 * 60 * 60 * 1000;
-            const elapsed = totalMs - (diff + (9 * 24 * 60 * 60 * 1000)); // Account for the 9 days already passed
-            const percent = (elapsed / totalMs) * 100;
-            progressFill.style.width = percent + "%";
+            const elapsed = totalMs - diff;
+            progressFill.style.width = (elapsed / totalMs) * 100 + "%";
         }
     }
 
