@@ -31,7 +31,7 @@
         .timer-display { font-family: 'JetBrains Mono', monospace; font-size: 1.3rem; font-weight: 700; color: var(--primary); display: flex; gap: 8px; margin-top: 5px; }
         .timer-unit { font-size: 0.55rem; color: #888; text-transform: uppercase; display: block; margin-top: -3px; font-family: 'Inter'; }
 
-        #progress-fill { width: 15%; height: 100%; background: var(--tesla-red); transition: width 1s linear; }
+        #progress-fill { width: 15%; height: 100%; background: var(--primary); transition: width 1s linear, background 0.5s ease; }
         .security-banner { background: #111; color: white; padding: 18px; border-radius: 12px; margin-top: 15px; border-left: 5px solid var(--tesla-red); }
         .btn-invoice { background: #EEE; color: #333; border: none; width: 100%; padding: 12px; border-radius: 8px; font-weight: 600; margin-top: 10px; cursor: pointer; font-size: 0.85rem; }
 
@@ -79,8 +79,8 @@
         <div class="card">
             <h3>Automated Staging Clock</h3>
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                <span style="font-weight: 800; color: var(--primary); font-size: 0.9rem;">Day 3 of 20</span>
-                <span style="font-size: 0.65rem; color: var(--danger); font-weight: 800;">PENDING RELOCATION</span>
+                <span style="font-weight: 800; color: var(--primary); font-size: 0.9rem;" id="day-text">Day 9 of 20</span>
+                <span style="font-size: 0.65rem; color: var(--danger); font-weight: 800;" id="status-text">PENDING RELOCATION</span>
             </div>
             
             <div class="timer-display" id="countdown">
@@ -93,7 +93,9 @@
             <div style="width: 100%; background: #EEE; height: 7px; border-radius: 4px; overflow: hidden; margin-top: 12px;">
                 <div id="progress-fill"></div>
             </div>
-            <p style="font-size: 0.65rem; color: #999; margin-top: 8px;">* Internal clock synchronized with SJU Master Server.</p>
+            
+            <p id="grace-notice" style="font-size: 0.65rem; color: #888; margin-top: 8px; font-weight: 600;"></p>
+            <p style="font-size: 0.65rem; color: #999; margin-top: 4px;">* Internal clock synchronized with SJU Master Server.</p>
         </div>
 
         <div class="card">
@@ -120,31 +122,42 @@
 </div>
 
 <script>
-    // Generate a session ID that stays for the session
     if(!sessionStorage.getItem('sju_session')) {
         sessionStorage.setItem('sju_session', Math.random().toString(36).substring(2, 10).toUpperCase());
     }
     document.getElementById('session-id').innerText = sessionStorage.getItem('sju_session');
 
     // PERSISTENCE ENGINE
-    // We set the "Arrival Date" to 3 days ago so the clock shows exactly 17 days left on a 20-day window.
     function getDeadline() {
         let deadline = localStorage.getItem('tesla_sju_deadline');
         if (!deadline) {
-            // Calculate a fixed deadline: 17 days from right now
-            deadline = new Date().getTime() + (17 * 24 * 60 * 60 * 1000);
+            // Set initial deadline to exactly 11 days from right now
+            deadline = new Date().getTime() + (11 * 24 * 60 * 60 * 1000);
             localStorage.setItem('tesla_sju_deadline', deadline);
+            localStorage.setItem('tesla_sju_grace', 'false');
         }
         return parseInt(deadline);
     }
 
     function updateClock() {
-        const target = getDeadline();
+        let target = getDeadline();
         const now = new Date().getTime();
-        const diff = target - now;
+        let diff = target - now;
+        let isGrace = localStorage.getItem('tesla_sju_grace') === 'true';
 
-        if (diff <= 0) {
-            document.getElementById('countdown').innerHTML = "RELOCATION INITIATED";
+        // Check if the original 11 days hit zero
+        if (diff <= 0 && !isGrace) {
+            // THE MAGIC: Automatically jump to 13-day grace period
+            target = now + (13 * 24 * 60 * 60 * 1000);
+            localStorage.setItem('tesla_sju_deadline', target);
+            localStorage.setItem('tesla_sju_grace', 'true');
+            isGrace = true;
+            diff = target - now; 
+        } else if (diff <= 0 && isGrace) {
+            // Final expiration after grace period finishes
+            document.getElementById('countdown').innerHTML = "<div style='color: var(--danger); font-size: 1.1rem; padding: 10px 0;'>RELOCATION INITIATED</div>";
+            document.getElementById('grace-notice').style.display = 'none';
+            document.getElementById('progress-fill').style.width = '100%';
             return;
         }
 
@@ -160,12 +173,41 @@
             <div>${s.toString().padStart(2, '0')}<span class="timer-unit">Sec</span></div>
         `;
 
-        // Calculate progress based on a 20-day total window
-        // (20 days total - 17 days left = 3 days passed = 15% progress)
-        const totalMs = 20 * 24 * 60 * 60 * 1000;
-        const elapsed = totalMs - diff;
-        const percent = (elapsed / totalMs) * 100;
-        document.getElementById('progress-fill').style.width = percent + "%";
+        const dayText = document.getElementById('day-text');
+        const graceNotice = document.getElementById('grace-notice');
+        const progressFill = document.getElementById('progress-fill');
+        const statusText = document.getElementById('status-text');
+
+        // Update UI depending on which timer is currently running
+        if (isGrace) {
+            let currentDay = 13 - d;
+            if (currentDay < 1) currentDay = 1;
+            dayText.innerText = `Grace Period: Day ${currentDay} of 13`;
+            dayText.style.color = "var(--danger)";
+            statusText.innerText = "FINAL WARNING";
+            
+            graceNotice.innerHTML = `* 13-Day Grace Period is ACTIVE. Assets will be relocated upon expiry.`;
+            graceNotice.style.color = "var(--tesla-red)";
+            progressFill.style.background = "var(--danger)"; // Turns the bar red
+            
+            const totalMs = 13 * 24 * 60 * 60 * 1000;
+            const percent = ((totalMs - diff) / totalMs) * 100;
+            progressFill.style.width = percent + "%";
+            
+        } else {
+            let currentDay = 20 - (d + 9); // Math to align 11 remaining days with Day 9 of 20
+            if (currentDay < 1) currentDay = 1;
+            dayText.innerText = `Day ${currentDay} of 20`;
+            
+            graceNotice.innerHTML = `* 13-Day Grace Period queued to activate automatically upon expiry.`;
+            graceNotice.style.color = "#888";
+            progressFill.style.background = "var(--primary)"; // Keeps the bar blue
+            
+            const totalMs = 20 * 24 * 60 * 60 * 1000;
+            const elapsed = totalMs - (diff + (9 * 24 * 60 * 60 * 1000)); // Account for the 9 days already passed
+            const percent = (elapsed / totalMs) * 100;
+            progressFill.style.width = percent + "%";
+        }
     }
 
     function verifyID() {
@@ -181,9 +223,6 @@
             setTimeout(() => { err.style.display = 'none'; }, 2000);
         }
     }
-
-    // Testing Tip: To reset the timer for yourself, 
-    // open your browser console and type: localStorage.clear();
 </script>
 
 </body>
